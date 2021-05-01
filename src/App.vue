@@ -8,7 +8,18 @@
 
 
 export default {
-  name: 'App'
+  name: 'App',
+  data(){
+    return {
+      res:{}
+    }
+  },
+  //获取mock数据
+  mounted() {
+    this.$axios.get('/user/login').then((res)=>{
+      this.res= res
+    })
+  },
  
 }
 </script>

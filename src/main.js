@@ -1,11 +1,8 @@
 import axios from 'axios'
 import Vue from 'vue'
-
 import App from './App.vue'
 import router from './router'
 import store from './store'
-
-// Vue.use(axios)
 
 axios.defaults.baseURL='/api'
 axios.defaults.timeout= 8000
@@ -21,6 +18,10 @@ axios.interceptors.response.use(function (response) {
   }
 })
 
+const mock = true;
+if(mock){
+  require('../public/mock/api')
+}
 Vue.config.productionTip = false
 Vue.prototype.$axios= axios;
 new Vue({
