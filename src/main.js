@@ -19,10 +19,10 @@ axios.interceptors.response.use(function (response) {
   }
 })
 
-const mock = true;
-if(mock){
-  require('../public/mock/api')
-}
+// const mock = true;
+// if(mock){
+//   require('../public/mock/api')
+// }
 Vue.config.productionTip = false
 Vue.prototype.$axios= axios;
 new Vue({
