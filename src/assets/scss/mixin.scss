@@ -1,0 +1,12 @@
+@mixin flex($hor:space-between,$vert:center){
+    display: flex;
+    justify-content: $hor;
+    align-items: $vert;
+};
+@mixin bcg($w:0,$h:0,$url:'',$size:contain){
+    display: inline-block;
+    width: $w;
+    height: $h;
+    background: url($url) no-repeat center;
+    background-size: $size;
+}
