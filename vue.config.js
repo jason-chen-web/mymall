@@ -14,7 +14,7 @@ module.exports = {
           // /api是虚拟地址
           // 不能用于jsonp请求，只能用于axios发出的请求
         '/api':{
-          // 加api为了方便自己拦截
+          // 加api为了方便自己统一拦截,保證所有接口api開頭
           // /api是虚拟出来的
             // 拦截到api时代理到的目标/代理到哪里去，根据环境不同在域名前加前缀
           target:'http://mall-pre.springboot.cn',
