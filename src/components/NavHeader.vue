@@ -274,6 +274,7 @@ export default {
             overflow: hidden;
             transition: 500ms;
             text-align: center;
+            background-color: #fff;
 
             .product {
               float: left;
