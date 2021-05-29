@@ -4,7 +4,11 @@
       <img src="/imgs/logo-footer.png" alt="" />
       <p>无名商城</p>
     </div>
-    <div><a href="https://bra.in/7pD8gr" class="net" target="_blank">我的动态知识网络</a></div>
+    <div>
+      <a href="https://bra.in/7pD8gr" class="net" target="_blank"
+        >我的前端动态知识网络（实时更新）</a
+      >
+    </div>
     <div class="link">Copyright ©2021 All Rights Reserved.</div>
   </div>
 </template>
@@ -33,12 +37,10 @@ export default {
       margin-bottom: 13px;
     }
   }
-  .net{
+  .net {
     display: inline-block;
-      color: #999999;
-            margin-bottom: 13px;
-
-
+    color: #ff7301;
+    margin-bottom: 13px;
   }
 }
 </style>
