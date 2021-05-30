@@ -7,11 +7,14 @@
             <li class="menu-item">
               <a href="javascript:;">手机 电话卡</a>
               <div class="children">
-                <ul v-for="(item,i) of menuList" :key="i">
-                  <li v-for="(sub,j) of item " :key="j">
-                    <a :href="sub?'/#/product/'+sub.id:''">
-                      <img :src="sub?sub.img:'/imgs/item-box-1.png'" alt="" />
-                      {{sub?sub.name:'小米9'}}
+                <ul v-for="(item, i) of menuList" :key="i">
+                  <li v-for="(sub, j) of item" :key="j">
+                    <a :href="sub ? '/#/product/' + sub.id : ''">
+                      <img
+                        :src="sub ? sub.img : '/imgs/item-box-1.png'"
+                        alt=""
+                      />
+                      {{ sub ? sub.name : "小米9" }}
                     </a>
                   </li>
                 </ul>
@@ -52,8 +55,20 @@
           <div class="swiper-button-next" slot="button-next"></div>
         </swiper>
       </div>
-      <div class="ads-box"></div>
-      <div class="banner"></div>
+      <div class="ads-box">
+        <a
+          :href="'/#/product/' + item.id"
+          v-for="(item, index) of adsList"
+          :key="index"
+        >
+          <img :src="item.img" alt="" />
+        </a>
+      </div>
+      <div class="banner">
+        <a href="/#/product/30">
+          <img src="/imgs/banner-1.png" alt="" />
+        </a>
+      </div>
       <div class="product-box"></div>
     </div>
     <service-bar></service-bar>
@@ -144,6 +159,24 @@ export default {
         [0, 0, 0, 0],
         [0, 0, 0, 0],
       ],
+      adsList: [
+        {
+          id: 33,
+          img: "/imgs/ads/ads-1.png",
+        },
+        {
+          id: 48,
+          img: "/imgs/ads/ads-2.jpg",
+        },
+        {
+          id: 45,
+          img: "/imgs/ads/ads-3.png",
+        },
+        {
+          id: 47,
+          img: "/imgs/ads/ads-4.jpg",
+        },
+      ],
     };
   },
 };
@@ -182,32 +215,32 @@ export default {
           }
           &:hover {
             background: $colorA;
-            .children{
+            .children {
               display: block;
             }
           }
-          .children{
+          .children {
             display: none;
             width: 964px;
             height: 451px;
             background-color: $colorG;
             position: absolute;
-            left:264px;
+            left: 264px;
             top: 0;
-            ul{
+            ul {
               display: flex;
               justify-content: space-between;
               height: 75px;
-              li{
+              li {
                 height: 75px;
                 line-height: 75px;
                 flex: 1;
                 padding-left: 23px;
-                a{
+                a {
                   color: $colorB;
                   font-size: 14px;
                 }
-                img{
+                img {
                   width: 42px;
                   height: 35px;
                   vertical-align: middle;
@@ -229,6 +262,18 @@ export default {
         height: 100%;
       }
     }
+  }
+  .ads-box {
+    @include flex();
+    margin-top: 14px;
+    margin-bottom: 31px;
+    a {
+      width: 296px;
+      height: 167px;
+    }
+  }
+  .banner{
+    margin-bottom: 50px;
   }
 }
 </style>
