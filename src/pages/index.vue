@@ -69,39 +69,46 @@
           <img src="/imgs/banner-1.png" alt="" />
         </a>
       </div>
-      
     </div>
     <div class="product-box">
-        <div class="container">
-          <h2>手机</h2>
-          <div class="wrapper">
-            <div class="banner-left">
-              <a href="/#/product/35">
-                <img src="/imgs/mix-alpha.jpg" alt="" />
-              </a>
-            </div>
-            <div class="list-box">
-              <div class="list" v-for="(arr, i) of phoneList" :key="i">
-                <div class="item" v-for="(item, j) of arr" :key="j">
-                  <span>新品</span>
-                  <div class="item-img">
-                    <img
-                      src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6f2493e6c6fe8e2485c407e5d75e3651.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="item-info">
-                    <h3>小米9 6GB+128GB</h3>
-                    <p>骁龙855，索尼4800万超广角微距</p>
-                    <p class="price">2999元</p>
-                  </div>
+      <div class="container">
+        <h2>手机</h2>
+        <div class="wrapper">
+          <div class="banner-left">
+            <a href="/#/product/35">
+              <img src="/imgs/mix-alpha.jpg" alt="" />
+            </a>
+          </div>
+          <div class="list-box">
+            <div class="list" v-for="(arr, i) of phoneList" :key="i">
+              <div class="item" v-for="(item, j) of arr" :key="j">
+                <span :class="{ 'new-pro': j % 2 == 0 }">新品</span>
+                <div class="item-img">
+                  <img :src="item.mainImage" alt="" />
+                </div>
+                <div class="item-info">
+                  <h3>{{ item.name }}</h3>
+                  <p>{{ item.subtitle }}</p>
+                  <p class="price">{{ item.price }}元</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
     <service-bar></service-bar>
+    <modal
+      title="提示"
+      sureText="查看购物车"
+      btnType="1"
+      modalType="middle"
+      :showModal="true"
+    >
+      <template v-slot:body>
+        <p>商品添加成功！</p>
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -110,12 +117,14 @@ import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 
 import ServiceBar from "../components/ServiceBar";
+import Modal from "../components/Modal";
 export default {
   name: "index",
   components: {
     Swiper,
     SwiperSlide,
     ServiceBar,
+    Modal,
   },
   data() {
     return {
@@ -208,10 +217,29 @@ export default {
         },
       ],
       phoneList: [
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
+        // [1, 1, 1, 1],
+        // [1, 1, 1, 1],
       ],
+      
     };
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      this.$axios
+        .get("/products", {
+          params: {
+            categoryId: 100012,
+            pageSize: 14,
+          },
+        })
+        .then((res) => {
+          res.list = res.list.slice(6, 14);
+          this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)];
+        });
+    },
   },
 };
 </script>
@@ -328,15 +356,32 @@ export default {
             margin-bottom: 0;
           }
           .item {
+            // display: flex;
+            // flex-direction: column;
+            // justify-content: center;
+            // align-items: center;
             width: 236px;
             height: 302px;
             background: $colorG;
             text-align: center;
             span {
+              display: inline-block;
+              width: 67px;
+              height: 24px;
+              font-style: 14px;
+              line-height: 24px;
+              color: #fff;
+              &.new-pro {
+                background-color: #7ecf68;
+              }
+              &.kill-pro {
+                background-color: #e82626;
+              }
             }
             .item-img {
               img {
                 height: 195px;
+                width: 100%;
               }
             }
             .item-info {

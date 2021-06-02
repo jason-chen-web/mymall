@@ -21,7 +21,7 @@ export default {
 
 <style lang='scss'>
 .nav-footer {
-  width: 1919px;
+  // width: 1919px;
   height: 234px;
   background: #333333;
   border-top: 4px solid #ff7301;
