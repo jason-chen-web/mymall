@@ -130,12 +130,13 @@ export default {
   props: {},
   data() {
     return {
-      username: "jack",
+      username: "",
       phoneList: [],
     };
   },
   mounted() {
     this.getProductList();
+    
   },
   methods: {
     login(){
@@ -186,6 +187,7 @@ export default {
         background: #ff6600;
         text-align: center;
         color: #fff;
+        margin-right: 0;
         .icon-cart {
           @include bcg(16px, 12px, "/imgs/icon-cart-checked.png");
           // display: inline-block;
