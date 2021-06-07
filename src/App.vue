@@ -25,13 +25,15 @@ export default {
   methods: {
     // 拉取数据
     getUser() {
-      this.$axios.get("/user").then(() => {
+      this.$axios.get("/user").then((res) => {
         // to-do保存到vuex里
+        this.$store.dispatch("saveUserName", res.username);
       });
     },
     getCartCount() {
-      this.$axios.get("/carts/products/sum").then(() => {
+      this.$axios.get("/carts/products/sum").then((res) => {
         // to-do保存到vuex里
+        this.$store.dispatch("saveCartCount", res);
       });
     },
   },

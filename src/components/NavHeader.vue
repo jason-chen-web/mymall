@@ -9,13 +9,13 @@
           <a href="javascript:;">协议规则</a>
         </div>
         <div class="name">
-          <a href="javascript:;" v-if="username">{{username}}</a>
-          <a href="javascript:;" v-if="!username" @click='login'>登录</a>
+          <a href="javascript:;" v-if="username">{{ username }}</a>
+          <a href="javascript:;" v-if="!username" @click="login">登录</a>
           <a href="javascript:;" v-if="username">退出</a>
           <a href="javascript:;" v-if="username">我的訂單</a>
 
           <a href="javascript:;" class="cart" @click="goToCart">
-            <span class="icon-cart"></span> 购物车</a
+            <span class="icon-cart"></span> 购物车({{cartCount}})</a
           >
         </div>
       </div>
@@ -125,24 +125,30 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   name: "nav-header",
   props: {},
   data() {
     return {
-      username: "",
       phoneList: [],
     };
   },
+  computed: {
+    // username() {
+    //   return this.$store.state.username;
+    // },
+    // cartCount() {
+    //   return this.$store.state.cartCount;
+    // },
+    ...mapState(['username','cartCount'])
+  },
   mounted() {
     this.getProductList();
-    
   },
   methods: {
-    login(){
-      this.$router.push(
-        '/login'
-      )
+    login() {
+      this.$router.push("/login");
     },
     getProductList() {
       this.$axios

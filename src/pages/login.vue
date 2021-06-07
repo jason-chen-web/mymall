@@ -52,6 +52,8 @@
   </div>
 </template>
 <script>
+// 解构
+import {mapActions} from 'vuex'
 export default {
   name: "login",
   data() {
@@ -84,11 +86,15 @@ export default {
           // expire-session-关闭浏览器-后数据消失
           this.$cookie.set("userId", res.id, { expires: "1M" });
           // to-do 保存用户名
+          this.saveUserName(res.username);
+          // this.$store.dispatch('saveUserName',res.username)
+
           // this.$store.dispatch('saveUserName',res.username);
           // 登录成功后，通过dispatch触发action里定义的saveUserName方法 ，保存用户名到vuex-它会被展示到navheader里
           this.$router.push("/index");
         });
     },
+    ...mapActions(['saveUserName']),
     register() {
       this.$axios
         .post("/user/register", {
