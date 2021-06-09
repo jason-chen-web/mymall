@@ -1,11 +1,18 @@
 <template>
+  <!-- // 首页,最终嵌套到home的router-view里 -->
   <div class="index">
     <div class="container">
+      <!-- 轮播 -->
       <div class="swiper-box">
+        <!-- 菜单 -->
         <div class="nav-menu">
+          <!-- 父级 -->
           <ul class="menu-wrap">
+            <!-- 子项 -->
             <li class="menu-item">
               <a href="javascript:;">手机 电话卡</a>
+              <!-- hover后的显示项 -->
+              <!-- 定义二维数组-循环两次,横向循环6次，纵向循环4次 -->
               <div class="children">
                 <ul v-for="(item, i) of menuList" :key="i">
                   <li v-for="(sub, j) of item" :key="j">
@@ -55,6 +62,7 @@
           <div class="swiper-button-next" slot="button-next"></div>
         </swiper>
       </div>
+      <!-- 广告位 -->
       <div class="ads-box">
         <a
           :href="'/#/product/' + item.id"
@@ -64,25 +72,33 @@
           <img v-lazy="item.img" alt="" />
         </a>
       </div>
+      <!-- banner位 -->
       <div class="banner">
         <a href="/#/product/30">
           <img v-lazy="'/imgs/banner-1.png'" alt="" />
         </a>
       </div>
     </div>
+    <!-- 商品列表 -->
     <div class="product-box">
       <div class="container">
+        <!-- 标题 -->
         <h2>手机</h2>
+                <!-- 定义大结构，里面左右结构 -->
         <div class="wrapper">
+                    <!-- 左侧区 -->
           <div class="banner-left">
             <a href="/#/product/35">
               <img v-lazy="'/imgs/mix-alpha.jpg'" alt="" />
             </a>
           </div>
+                    <!-- 右侧区 -->
           <div class="list-box">
+                        <!-- 横向循环两次纵向循环4次 -->
             <div class="list" v-for="(arr, i) of phoneList" :key="i">
               <div class="item" v-for="(item, j) of arr" :key="j">
                 <span :class="{ 'new-pro': j % 2 == 0 }">新品</span>
+                               <!-- 'new-pro'-key和j%2==0-value，只不过value我们写的是一个判断，取布尔值 -->
                 <div class="item-img">
                   <img v-lazy="item.mainImage" alt="" />
                 </div>
@@ -107,8 +123,8 @@
       btnType="1"
       modalType="middle"
       :showModal="showModal"
-      @submit='goToCart'
-      @cancel='showModal=false'
+      @submit="goToCart"
+      @cancel="showModal = false"
     >
       <template v-slot:body>
         <p>商品添加成功！</p>
@@ -118,9 +134,10 @@
 </template>
 
 <script>
+// 引入部分组件
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
-
+// 引入swiper样式
 import ServiceBar from "../components/ServiceBar";
 import Modal from "../components/Modal";
 export default {
@@ -229,15 +246,19 @@ export default {
     };
   },
   mounted() {
+        // 初始化,加载商品列表
     this.init();
   },
   methods: {
     init() {
+            // 门户-产品接口
+      // 从products数据库拿params数据
       this.$axios
         .get("/products", {
           params: {
             categoryId: 100012,
             pageSize: 14,
+                        // 前六条上面用，后8条下面用
           },
         })
         .then((res) => {
@@ -247,7 +268,7 @@ export default {
     },
     addCart() {
       this.showModal = true;
-return;
+      return;
 
       // this.$axios
       //   .post("/cart", {
@@ -257,11 +278,9 @@ return;
       //   .then((res) => {})
       //   .catch(() => {});
     },
-    goToCart(){
-this.$router.push(
-  '/cart'
-)
-    }
+    goToCart() {
+      this.$router.push("/cart");
+    },
   },
 };
 </script>

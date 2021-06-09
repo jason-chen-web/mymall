@@ -6,10 +6,12 @@ import actions from './actions'
 
 Vue.use(Vuex);
 const state = {
-    username:'',
-    cartCount:0
+    username:'',//登录成功用0-不成功用10
+    cartCount:0//购物车商品数量
 
 }
+// Store挂载到vuex实例上
+
 export default new Vuex.Store({
     state,
     mutations,

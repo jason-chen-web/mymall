@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- 用来加载所有子页面，用来嵌套其他组件 -->
     <router-view></router-view>
   </div>
 </template>
@@ -23,14 +24,21 @@ export default {
     this.getCartCount();
   },
   methods: {
-    // 拉取数据
+    // 刷新时更新一次数据
+    // 获取用户信息
     getUser() {
       this.$axios.get("/user").then((res) => {
         // to-do保存到vuex里
+        // 写法参考文档
+        // 未登录状态时res为undefined可能会报错，所以res设置默认值
         this.$store.dispatch("saveUserName", res.username);
+        // 保存到vuex里面
       });
     },
+    // 获取购物车商品数量
     getCartCount() {
+      // 写法参考文档
+      // 未登录状态时res为undefined可能会报错，所以res设置默认值
       this.$axios.get("/carts/products/sum").then((res) => {
         // to-do保存到vuex里
         this.$store.dispatch("saveCartCount", res);

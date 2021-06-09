@@ -12,6 +12,7 @@
           <slot name="body"></slot>
         </div>
         <div class="modal-footer">
+                    <!-- 只有确定按钮时 -->
           <a
             href="javascript:;"
             class="btn"
@@ -19,6 +20,7 @@
             @click="$emit('submit')"
             >{{sureText}}</a
           >
+                    <!-- 取消按钮时 -->
           <a
             href="javascript:;"
             class="btn"
@@ -26,7 +28,7 @@
             @click="$emit('cancel')"
             >{{cancelText}}</a
           >
-
+          <!-- 两个都有时 -->
           <div class="btn-group" v-if="btnType==3">
             <a href="javascript:;" class="btn"  @click="$emit('submit')">{{sureText}}</a>
             <a href="javascript:;" class="btn" @click="$emit('cancel')">{{cancelText}}</a>
@@ -46,7 +48,7 @@ export default {
       // 默认值
       default: "form",
     },
-    // 标题
+    // 弹框标题
     title: String,
     // 按钮类型：1确定按钮 2取消按钮 3 确定取消都有
     btnType: String,

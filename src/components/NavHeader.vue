@@ -10,12 +10,14 @@
         </div>
         <div class="name">
           <a href="javascript:;" v-if="username">{{ username }}</a>
+          <!-- 退出时显示登陆 -->
           <a href="javascript:;" v-if="!username" @click="login">登录</a>
+          <!-- 登陆时显示退出 -->
           <a href="javascript:;" v-if="username">退出</a>
           <a href="javascript:;" v-if="username">我的訂單</a>
 
           <a href="javascript:;" class="cart" @click="goToCart">
-            <span class="icon-cart"></span> 购物车({{cartCount}})</a
+            <span class="icon-cart"></span> 购物车({{ cartCount }})</a
           >
         </div>
       </div>
@@ -24,6 +26,7 @@
     <div class="nav-header">
       <div class="container">
         <div class="header-logo">
+          <!-- 点击后跳到首页 -->
           <a href="/#/index"></a>
         </div>
         <div class="header-menu">
@@ -36,7 +39,10 @@
                   v-for="(item, index) of phoneList"
                   :key="index"
                 >
+                  <!-- :key="index"数据量大时有用，小时用处小 -->
                   <a :href="'/#/product/' + item.id" target="_blank">
+                    <!-- href=""双引号内的内容都是变量，如有str加'',
+                      效果等同于<router-link :to="'/pagename/'+item.id" -->
                     <div class="pro-img">
                       <img v-lazy="item.mainImage" alt="item.subtitle" />
                     </div>
@@ -125,7 +131,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   name: "nav-header",
   props: {},
@@ -135,13 +141,16 @@ export default {
     };
   },
   computed: {
+    // 本来是写data里面的，但会出现数据已经有但没展示所以放这里
+    // 作用读取vuex里的username
+    // 一旦变量发生变化，会重新计算一次，重新调用一次方法
     // username() {
     //   return this.$store.state.username;
     // },
     // cartCount() {
     //   return this.$store.state.cartCount;
     // },
-    ...mapState(['username','cartCount'])
+    ...mapState(["username", "cartCount"]),
   },
   mounted() {
     this.getProductList();
@@ -153,13 +162,19 @@ export default {
     getProductList() {
       this.$axios
         .get("/products", {
+          // 门户-产品接口
+          // 后台接口名字叫products
           params: {
+            //  手机的categoryid为 100012-写入100012就能返回对应的手机系列的数据
             categoryId: 100012,
+            // 接口地址严格按照接口文档去定义
+            //从这些数据里放回前六条，后续htnml{{}}中从这六条数据中拿自己想要的子数据
             pageSize: 6,
           },
         })
         .then((res) => {
           this.phoneList = res.list;
+          // res为经过接口拦截处理返回的内容为data里的子元素data里的内容
         });
     },
     goToCart() {
@@ -240,6 +255,7 @@ export default {
             // height: 55px;
             // background: url(/imgs/mi-home.png) no-repeat center;
             // background-size: 55px;
+            // &:after这个图是有显示的，织布和背景一样都是白色，所以看不出来
           }
           &:hover:before {
             margin-left: -55px;
