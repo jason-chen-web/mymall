@@ -1,7 +1,7 @@
 <template>
-  <div class="nav-bar" :class="{'is_fixed':isFixed}">
+  <div class="nav-bar" :class="{ is_fixed: isFixed }">
     <div class="container">
-      <div class="pro-title">小米8</div>
+      <div class="pro-title">{{ title }}</div>
       <div class="pro-param">
         <a href="javascript:;">概述<span>|</span></a>
         <a href="javascript:;">参数<span>|</span></a>
@@ -16,22 +16,27 @@ export default {
   name: "nav-bar",
   data() {
     return {
-      isFixed:false,
-    }
+      isFixed: false,
+    };
+  },
+  props: {
+    title: String,
   },
   mounted() {
-    window.addEventListener('scroll',this.initHeight)
+    window.addEventListener("scroll", this.initHeight);
     // 写initHeight为了方便后续移除事件
   },
   methods: {
-    initHeight(){
-      let scrollTop= document.documentElement.scrollTop || window.pageYOffset ||document.body.scrollTop;
-      this.isFixed = scrollTop > 152?true:false;
-    }
+    initHeight() {
+      let scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop;
+      this.isFixed = scrollTop > 152 ? true : false;
+    },
   },
   destroyed() {
-        window.removeEventListener('scroll',this.initHeight)
-
+    window.removeEventListener("scroll", this.initHeight);
   },
 };
 </script>
@@ -48,7 +53,7 @@ export default {
     position: fixed;
     top: 0;
     width: 100%;
-    box-shadow: 0 5px  5px $colorE;
+    box-shadow: 0 5px 5px $colorE;
   }
   .container {
     @include flex();
