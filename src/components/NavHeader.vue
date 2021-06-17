@@ -226,43 +226,7 @@ export default {
       position: relative;
       height: 112px;
       @include flex();
-      .header-logo {
-        overflow: hidden;
-        display: inline-block;
-        width: 55px;
-        height: 55px;
-        background: #ff6600;
-
-        a {
-          display: inline-block;
-          width: 110px;
-          height: 55px;
-          &:before {
-            content: "";
-            @include bcg(55px, 55px, "/imgs/mi-logo.png");
-            // display: inline-block;
-            // width: 55px;
-            // height: 55px;
-            // background: url('/imgs/mi-logo.png') no-repeat center;
-            // background-size: contain;
-            transition: margin 200ms;
-          }
-          &:after {
-            content: "";
-            @include bcg(55px, 55px, "/imgs/mi-home.png");
-            // display: inline-block;
-            // width: 55px;
-            // height: 55px;
-            // background: url(/imgs/mi-home.png) no-repeat center;
-            // background-size: 55px;
-            // &:after这个图是有显示的，织布和背景一样都是白色，所以看不出来
-          }
-          &:hover:before {
-            margin-left: -55px;
-            transition: margin 200ms;
-          }
-        }
-      }
+    
       .header-menu {
         display: inline-block;
         padding-left: 209px;

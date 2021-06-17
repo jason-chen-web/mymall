@@ -84,21 +84,21 @@
       <div class="container">
         <!-- 标题 -->
         <h2>手机</h2>
-                <!-- 定义大结构，里面左右结构 -->
+        <!-- 定义大结构，里面左右结构 -->
         <div class="wrapper">
-                    <!-- 左侧区 -->
+          <!-- 左侧区 -->
           <div class="banner-left">
             <a href="/#/product/35">
               <img v-lazy="'/imgs/mix-alpha.jpg'" alt="" />
             </a>
           </div>
-                    <!-- 右侧区 -->
+          <!-- 右侧区 -->
           <div class="list-box">
-                        <!-- 横向循环两次纵向循环4次 -->
+            <!-- 横向循环两次纵向循环4次 -->
             <div class="list" v-for="(arr, i) of phoneList" :key="i">
               <div class="item" v-for="(item, j) of arr" :key="j">
                 <span :class="{ 'new-pro': j % 2 == 0 }">新品</span>
-                               <!-- 'new-pro'-key和j%2==0-value，只不过value我们写的是一个判断，取布尔值 -->
+                <!-- 'new-pro'-key和j%2==0-value，只不过value我们写的是一个判断，取布尔值 -->
                 <div class="item-img">
                   <img v-lazy="item.mainImage" alt="" />
                 </div>
@@ -246,19 +246,19 @@ export default {
     };
   },
   mounted() {
-        // 初始化,加载商品列表
+    // 初始化,加载商品列表
     this.init();
   },
   methods: {
     init() {
-            // 门户-产品接口
+      // 门户-产品接口
       // 从products数据库拿params数据
       this.$axios
         .get("/products", {
           params: {
             categoryId: 100012,
             pageSize: 14,
-                        // 前六条上面用，后8条下面用
+            // 前六条上面用，后8条下面用
           },
         })
         .then((res) => {
@@ -266,17 +266,17 @@ export default {
           this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)];
         });
     },
-    addCart() {
-      this.showModal = true;
-      return;
-
-      // this.$axios
-      //   .post("/cart", {
-      //     productId: id,
-      //     selected: true,
-      //   })
-      //   .then((res) => {})
-      //   .catch(() => {});
+    addCart(id) {
+      this.$axios
+        .post("/carts", {
+          productId: id,
+          selected: true,
+        })
+        .then((res) => {
+          this.showModal = true;
+          this.$store.dispatch('saveCartCount',res.cartTotalQuantity)
+        })
+        .catch(() => {});
     },
     goToCart() {
       this.$router.push("/cart");
