@@ -270,11 +270,13 @@ export default {
       this.$axios
         .post("/carts", {
           productId: id,
+          // 加入购物车时就已经是选中状态
           selected: true,
         })
         .then((res) => {
+          // 加购物车成功后会弹框
           this.showModal = true;
-          this.$store.dispatch('saveCartCount',res.cartTotalQuantity)
+          this.$store.dispatch("saveCartCount", res.cartTotalQuantity);
         })
         .catch(() => {});
     },

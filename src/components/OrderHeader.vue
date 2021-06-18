@@ -12,17 +12,32 @@
         </h2>
       </div>
       <div class="username">
-        <a href="javascript:;">admin</a>
+        <a href="javascript:;">{{username}}</a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "order-header",
   props: {
     title: String,
+  },
+   computed: {
+    // 本来是写data里面的，但会出现数据已经有但没展示所以放这里
+    // 作用读取vuex里的username
+    // 一旦变量发生变化，会重新计算一次，重新调用一次方法
+    // username() {
+    //   return this.$store.state.username;
+    // },
+    // cartCount() {
+    //   return this.$store.state.cartCount;
+    // },
+    ...mapState(["username"]),
+  },
+  mounted() {
   },
 };
 </script>
