@@ -39,9 +39,9 @@
               <div class="item-price">{{ item.productPrice }}元</div>
               <div class="item-num">
                 <div class="num-box">
-                  <a href="javascript:;" @click="updateCart(item,'-')">-</a>
+                  <a href="javascript:;" @click="updateCart(item, '-')">-</a>
                   <span>{{ item.quantity }}</span>
-                  <a href="javascript:;" @click="updateCart(item,'+')">+</a>
+                  <a href="javascript:;" @click="updateCart(item, '+')">+</a>
                 </div>
               </div>
               <div class="item-total">{{ item.productTotalPrice }}元</div>
@@ -59,7 +59,7 @@
           <div class="total fr">
             合计：<span>{{ cartTotalPrice }}</span
             >元
-            <a href="javascript:;" class="btn">去结算</a>
+            <a href="javascript:;" class="btn" @click="order">去结算</a>
           </div>
         </div>
       </div>
@@ -81,22 +81,14 @@ export default {
   },
   data() {
     return {
-      list: [],
-      allChecked: false,
-      checkedNum: 0,
-      cartTotalPrice: 0,
-
-      // list: [],//商品列表
-      // allChecked:false, //是否全取
-      // cartTotalPrice:0,//商品总金额
-      // checkedNum:0//选中商品数量
+      list: [], //商品列表
+      allChecked: false, //是否全选
+      checkedNum: 0, //商品总金额
+      cartTotalPrice: 0, //选中商品数量
     };
   },
   mounted() {
     this.getCartList();
-    // this.order();
-    // this.toggleAll();
-    // this.updateCart();
   },
   methods: {
     // 获取购物车列表
@@ -104,17 +96,16 @@ export default {
       this.$axios.get("/carts").then((res) => {
         this.renderData(res);
       });
-
-      // this.$axios.get("/carts").then((res) => {
-      //   this.list=res.cartProductVoList || [];
-      //   this.allChecked= res.selectedAll;
-      //   this.cartTotalPrice=res.cartTotalPrice;
-      //   this.checkedNum=this.list.filter(item=>item.productSelected).length
-      // });
     },
     // 购物车下单
     order() {
       // this.$router.push("/order/confirm");
+      let isCheck = this.list.every(item=>!item.productSelected)
+      if (isCheck) {
+        alert('请选择一件商品');
+      }else{
+        this.$router.push("/order/confirm")
+      }
     },
     // 控制全选功能
     toggleAll() {
@@ -130,15 +121,21 @@ export default {
       this.cartTotalPrice = res.cartTotalPrice;
       this.checkedNum = this.list.filter((item) => item.productSelected).length;
     },
+
+  
+
     // 更新购物车数量和购物车单选状态
+    // item点击对象，type操作类型
+    // 数量加减由接口控制
     updateCart(item, type) {
       let quantity = item.quantity,
-          selected = item.productSelected;
+        selected = item.productSelected;
       if (type == "-") {
         if (quantity == 1) {
           alert("商品至少保留一件");
           return;
         }
+        //  quantity=--quantity;
         --quantity;
       } else if (type == "+") {
         if (quantity > item.productStock) {
@@ -152,19 +149,18 @@ export default {
       this.$axios
         .put(`carts/${item.productId}`, {
           quantity,
-          selected
+          selected,
         })
         .then((res) => {
           this.renderData(res);
         });
     },
     // 删除购物车商品
-    delProduct(item){
-      this.$axios.delete(`/carts/${item.productId}`).then(res=>{
-                this.renderData(res);
-
-      })
-    }
+    delProduct(item) {
+      this.$axios.delete(`/carts/${item.productId}`).then((res) => {
+        this.renderData(res);
+      });
+    },
   },
 };
 </script>
