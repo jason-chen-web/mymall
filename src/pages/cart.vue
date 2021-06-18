@@ -7,7 +7,11 @@
     </order-header>
     <div class="wrapper">
       <div class="container">
-        <div class="cart-box" :class="{ checked: allChecked }">
+        <div
+          class="cart-box"
+          :class="{ checked: allChecked }"
+          @click="toggleAll"
+        >
           <ul class="cart-item-head">
             <li class="col-1"><span class="checkbox"></span>全选</li>
             <li class="col-3">商品名称</li>
@@ -87,16 +91,12 @@ export default {
   mounted() {
     this.getCartList();
     // this.order();
+    this.toggleAll();
   },
   methods: {
     getCartList() {
       this.$axios.get("/carts").then((res) => {
-        this.list = res.cartProductVoList;
-        this.allChecked = res.selectedAll;
-        this.cartTotalPrice = res.cartTotalPrice;
-        this.checkedNum = this.list.filter(
-          (item) => item.productSelected
-        ).length;
+        this.renderData(res);
       });
 
       // this.$axios.get("/carts").then((res) => {
@@ -109,6 +109,18 @@ export default {
     // 购物车下单
     order() {
       // this.$router.push("/order/confirm");
+    },
+    toggleAll() {
+      let url = this.allChecked ? "/carts/unSelectAll" : "/carts/selectAll";
+      this.$axios.put(url).then((res) => {
+        this.renderData(res);
+      });
+    },
+    renderData(res) {
+      this.list = res.cartProductVoList;
+      this.allChecked = res.selectedAll;
+      this.cartTotalPrice = res.cartTotalPrice;
+      this.checkedNum = this.list.filter((item) => item.productSelected).length;
     },
   },
 };
