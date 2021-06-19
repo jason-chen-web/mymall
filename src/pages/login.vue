@@ -53,7 +53,7 @@
 </template>
 <script>
 // 解构
-import {mapActions} from 'vuex'
+import { mapActions } from "vuex";
 export default {
   name: "login",
   data() {
@@ -92,7 +92,7 @@ export default {
           this.$router.push("/index");
         });
     },
-    ...mapActions(['saveUserName']),
+    ...mapActions(["saveUserName"]),
     register() {
       this.$axios
         .post("/user/register", {
@@ -101,7 +101,7 @@ export default {
           email: "admin1@163.com",
         })
         .then(() => {
-          alert("注册成功");
+          this.$message.warning("注册成功");
         });
     },
   },

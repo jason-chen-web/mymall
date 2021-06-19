@@ -97,14 +97,15 @@ export default {
         this.renderData(res);
       });
     },
-    // 购物车下单
+
+    // // 购物车下单
     order() {
       // this.$router.push("/order/confirm");
-      let isCheck = this.list.every(item=>!item.productSelected)
+      let isCheck = this.list.every((item) => !item.productSelected);
       if (isCheck) {
-        alert('请选择一件商品');
-      }else{
-        this.$router.push("/order/confirm")
+        this.$message.warning("请选择一件商品");
+      } else {
+        this.$router.push("/order/confirm");
       }
     },
     // 控制全选功能
@@ -122,8 +123,6 @@ export default {
       this.checkedNum = this.list.filter((item) => item.productSelected).length;
     },
 
-  
-
     // 更新购物车数量和购物车单选状态
     // item点击对象，type操作类型
     // 数量加减由接口控制
@@ -132,14 +131,15 @@ export default {
         selected = item.productSelected;
       if (type == "-") {
         if (quantity == 1) {
-          alert("商品至少保留一件");
+          this.$message.warning("商品至少保留一件");
           return;
         }
         //  quantity=--quantity;
         --quantity;
       } else if (type == "+") {
         if (quantity > item.productStock) {
-          alert("商品不能超过库存数量");
+          this.$message.warning("商品不能超过库存数量");
+
           return;
         }
         ++quantity;
@@ -158,6 +158,7 @@ export default {
     // 删除购物车商品
     delProduct(item) {
       this.$axios.delete(`/carts/${item.productId}`).then((res) => {
+        this.$message.success("删除成功");
         this.renderData(res);
       });
     },

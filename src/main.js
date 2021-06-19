@@ -3,6 +3,10 @@ import axios from "axios";
 import Vue from "vue";
 import VueLazyLoad from "vue-lazyload";
 import VueCookie from "vue-cookie";
+import {Message} from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+
 
 // 引入组件
 import App from "./App.vue";
@@ -38,9 +42,10 @@ axios.interceptors.response.use(function(response) {
     // 如果没写会进入then里
   } else {
     // 否则弹出警报信息
-    alert(res.msg);
+    this.$message.warning(res.msg)
     // 如果失败就抛出异常
     return Promise.reject(res);
+
   }
 });
 // else上面拦截的是业务
@@ -59,6 +64,9 @@ Vue.use(VueLazyLoad, {
 });
 Vue.use(VueCookie);
 // 注册组件
+// 注册，使用时直接this.$message即可,而不用每个组件都引入
+Vue.prototype.$message = Message;
+
 
 new Vue({
   router,
