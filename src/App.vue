@@ -20,14 +20,17 @@ export default {
   //   })
   // },
   mounted() {
-    this.getUser();
-    this.getCartCount();
+        // 如果用户登录了，就获取信息
+    if (this.$cookie.get("userId")) {
+      this.getUser();
+      this.getCartCount();
+    }
   },
   methods: {
     // 刷新时更新一次数据
     // 获取用户信息
     getUser() {
-      this.$axios.get("/user").then((res={}) => {
+      this.$axios.get("/user").then((res = {}) => {
         // to-do保存到vuex里
         // 写法参考文档
         // 未登录状态时res为undefined可能会报错，所以res设置默认值
@@ -39,7 +42,7 @@ export default {
     getCartCount() {
       // 写法参考文档
       // 未登录状态时res为undefined可能会报错，所以res设置默认值
-      this.$axios.get("/carts/products/sum").then((res=0) => {
+      this.$axios.get("/carts/products/sum").then((res = 0) => {
         // to-do保存到vuex里
         this.$store.dispatch("saveCartCount", res);
       });

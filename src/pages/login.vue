@@ -83,13 +83,24 @@ export default {
           // 使用前先在main区域导入插件，然后通过Vue.use（）加载
           // 用户登录成功后会有返回值，需要拿到用户id，把它保存到cookie里
           // 把用户id的值设置成返回的id，Session是过期时间
-          // expire-session-关闭浏览器-后数据消失
-          this.$cookie.set("userId", res.id, { expires: "1M" });
+          // expire-session-关闭浏览器-后数据消失-和後台的jessionid一樣
+          this.$cookie.set("userId", res.id, { expires: "Session" });
           // to-do 保存用户名
           this.saveUserName(res.username);
           // this.$store.dispatch('saveUserName',res.username);
           // 登录成功后，通过dispatch触发action里定义的saveUserName方法 ，保存用户名到vuex-它会被展示到navheader里
-          this.$router.push("/index");
+          // 登录成功后跳转到首页-首页会显示用户名-用vuex实现
+          //在登录页做数据跳转
+          //如果从登陆页面跳转而来
+
+          this.$router.push({
+            // 路由的名称
+            // 如果用query传参要用path
+            name: "index",
+            params: {
+              from: "login",
+            },
+          });
         });
     },
     ...mapActions(["saveUserName"]),

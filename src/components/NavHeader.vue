@@ -13,8 +13,8 @@
           <!-- 退出时显示登陆 -->
           <a href="javascript:;" v-if="!username" @click="login">登录</a>
           <!-- 登陆时显示退出 -->
-          <a href="javascript:;" v-if="username">退出</a>
-          <a href="javascript:;" v-if="username">我的訂單</a>
+          <a href="javascript:;" v-if="username" @click="logout">退出 </a>
+          <a href="javascript:;" v-if="username">我的订单</a>
 
           <a href="javascript:;" class="cart" @click="goToCart">
             <span class="icon-cart"></span> 购物车({{ cartCount }})</a
@@ -154,6 +154,11 @@ export default {
   },
   mounted() {
     this.getProductList();
+    // 如果是从登陆界面过来的就调用getCartCount(),getCartCount()之前在app.vue里已调用过一次
+    let params = this.$route.params;
+    if (params && params.from == "login") {
+      this.getCartCount();
+    }
   },
   methods: {
     login() {
@@ -177,8 +182,33 @@ export default {
           // res为经过接口拦截处理返回的内容为data里的子元素data里的内容
         });
     },
+    //登录时拉取之前的购物车记录
+    getCartCount() {
+      // 写法参考文档
+      // 未登录状态时res为undefined可能会报错，所以res设置默认值
+      this.$axios.get("/carts/products/sum").then((res = 0) => {
+        // to-do保存到vuex里
+        this.$store.dispatch("saveCartCount", res);
+      });
+    },
     goToCart() {
       this.$router.push("/cart");
+    },
+    logout() {
+      this.$axios
+        .post("/user/logout", {
+          // 门户-产品接口
+          // 后台接口名字叫products
+        })
+        .then(() => {
+          // 清除后台会话即jsessionid
+          this.$message.success("退出成功");
+          // 清除登陆时种的userid，过期设为马上
+          this.$cookie.set("userId", "", { expire: "-1" });
+          // 清空vuex里的用户名和购物车数量
+          this.$store.dispatch("saveUserName", "");
+          this.$store.dispatch("saveCartCount", "0");
+        });
     },
   },
 };
@@ -226,7 +256,7 @@ export default {
       position: relative;
       height: 112px;
       @include flex();
-    
+
       .header-menu {
         display: inline-block;
         padding-left: 209px;
