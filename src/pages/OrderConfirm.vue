@@ -188,21 +188,39 @@
       <template v-slot:body>
         <div class="edit-wrap">
           <div class="item">
-            <input type="text" class="input" placeholder="姓名" />
-            <input type="text" class="input" placeholder="手机号" />
+            <input
+              type="text"
+              class="input"
+              placeholder="姓名"
+              v-model="checkedItem.receiverName"
+            />
+            <input
+              type="text"
+              class="input"
+              placeholder="手机号"
+              v-model="checkedItem.receiverMobile"
+            />
           </div>
           <div class="item">
-            <select name="province" id="">
+            <select
+              name="province"
+              id=""
+              v-model="checkedItem.receiverProvince"
+            >
               <option value="北京">北京</option>
               <option value="天津">天津</option>
               <option value="河北">河北</option>
             </select>
-            <select name="city" id="">
+            <select name="city" id="" v-model="checkedItem.receiverCity">
               <option value="北京">北京</option>
               <option value="天津">天津</option>
               <option value="河北">石家庄</option>
             </select>
-            <select name="district" id="">
+            <select
+              name="district"
+              id=""
+              v-model="checkedItem.receiverDistrict"
+            >
               <option value="昌平区">昌平区</option>
               <option value="海淀区">海淀区</option>
               <option value="东城区">东城区</option>
@@ -211,10 +229,18 @@
             </select>
           </div>
           <div class="item">
-            <textarea name="street"></textarea>
+            <textarea
+              name="street"
+              v-model="checkedItem.receiverAddress"
+            ></textarea>
           </div>
           <div class="item">
-            <input type="text" class="input" placeholder="邮编" />
+            <input
+              type="text"
+              class="input"
+              placeholder="邮编"
+              v-model="checkedItem.receiverZip"
+            />
           </div>
         </div>
       </template>
@@ -247,7 +273,7 @@ export default {
       count: 0, //商品结算数量
       checkedItem: {}, //选中的商品对象
       userAction: "", //用户的行为 0：新增，1：编辑，2删除
-      showEditModal: true, //是否显示新增或编辑弹框
+      showEditModal: false, //是否显示新增或编辑弹框
     };
   },
   components: {
@@ -280,6 +306,7 @@ export default {
       this.checkedItem = item;
       this.userAction = 2;
       this.showDelModal = true;
+
       // this.submitAddress();
     },
     // checkedItem已赋值/改变为item，全局有效，
@@ -289,7 +316,9 @@ export default {
     submitAddress() {
       let { userAction, checkedItem } = this;
       // 等价let checkedItem=this.checkedItem;
-      let method, url;
+      let method,
+        url,
+        params = {};
       if (userAction == 0) {
         (method = "post"), (url = "/shippings");
       } else if (userAction == 1) {
@@ -298,7 +327,47 @@ export default {
       } else {
         (method = "delete"), (url = `shippings/${checkedItem.id}`);
       }
-      this.$axios[method](url).then(() => {
+      if (userAction == 0 || userAction == 1) {
+        let {
+          receiverName,
+          receiverMobile,
+          receiverProvince,
+          receiverCity,
+          receiverDistrict,
+          receiverAddress,
+          receiverZip,
+        } = checkedItem;
+        let errMsg = "";
+        if (!receiverName) {
+          errMsg = "请输入收货人名称";
+        } else if (!receiverMobile || !/\d{11}/.test(receiverMobile)) {
+          errMsg = "请输入正确格式的手机号";
+        } else if (!receiverProvince) {
+          errMsg = "请选择省份";
+        } else if (!receiverCity) {
+          errMsg = "请选择对应的城市";
+        } else if (!receiverDistrict || !receiverAddress) {
+          errMsg = "请输入收获地址";
+        } else if (!/\d{6}/.test(receiverZip)) {
+          errMsg = "请输入六位邮编";
+        }
+
+        if (errMsg) {
+          this.$message.error(errMsg);
+          return;
+        }
+
+        params = {
+          receiverName,
+          receiverMobile,
+          receiverProvince,
+          receiverCity,
+          receiverDistrict,
+          receiverAddress,
+          receiverZip,
+        };
+      }
+      this.$axios[method](url, params).then(() => {
         // 点击确认后关闭弹框
         this.closeModal();
         // 拉取最新数据，防止两个人登录同账号，都删东西
@@ -310,11 +379,14 @@ export default {
     // 打开新增地址弹框
     openAddressModal() {
       this.showEditModal = true;
+      this.userAction = 0;
+      this.checkedItem = {};
     },
     closeModal() {
       this.checkedItem = {};
       this.userAction = "";
       this.showDelModal = false;
+      this.showEditModal = false;
     },
     // 订单提交
     orderSubmit() {
