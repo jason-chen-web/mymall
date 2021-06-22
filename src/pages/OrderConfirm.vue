@@ -1,10 +1,10 @@
 <template>
   <div class="order-confirm">
-    <order-header title="订单确认">
+    <!-- <order-header title="订单确认">
       <template v-slot:tip>
         <span>请认真填写收货地址</span>
       </template>
-    </order-header>
+    </order-header> -->
     <!-- 定义svg -->
     <svg
       version="1.1"
@@ -55,7 +55,13 @@
           <div class="item-address">
             <h2 class="addr-title">收货地址</h2>
             <div class="addr-list clearfix">
-              <div class="addr-info" v-for="(item, index) in list" :key="index">
+              <div
+                class="addr-info"
+                :class="{ 'checked': index == checkIndex }"
+                @click="checkIndex = index"
+                v-for="(item, index) in list"
+                :key="index"
+              >
                 <h2>{{ item.receiverName }}</h2>
                 <div class="phone">{{ item.receiverMobile }}</div>
                 <div class="street">
@@ -77,7 +83,11 @@
                     </svg>
                   </a>
                   <!-- item即删除的对象 -->
-                  <a href="javascript:;" class="fr">
+                  <a
+                    href="javascript:;"
+                    class="fr"
+                    @click="editAddressModal(item)"
+                  >
                     <!-- 引用svg-矢量图 -->
                     <svg class="icon icon-edit">
                       <!-- 使用svg -->
@@ -260,7 +270,7 @@
   </div>
 </template>
 <script>
-import OrderHeader from "../components/OrderHeader";
+// import OrderHeader from "../components/OrderHeader";
 import Modal from "./../components/Modal";
 export default {
   name: "order-confirm",
@@ -274,10 +284,11 @@ export default {
       checkedItem: {}, //选中的商品对象
       userAction: "", //用户的行为 0：新增，1：编辑，2删除
       showEditModal: false, //是否显示新增或编辑弹框
+      checkIndex: 0, //当前选中收获地址的索引
     };
   },
   components: {
-    OrderHeader,
+    // OrderHeader,
     Modal,
   },
   mounted() {
@@ -388,15 +399,32 @@ export default {
       this.showDelModal = false;
       this.showEditModal = false;
     },
+    // 打开新增地址弹框
+    editAddressModal(item) {
+      this.showEditModal = true;
+      this.userAction = 1;
+      this.checkedItem = item;
+    },
     // 订单提交
     orderSubmit() {
-      this.$router.push({
-        path: "/order/pay",
-        // 传订单号
-        query: {
-          orderNo: 123,
-        },
-      });
+      let item = this.list[this.checkIndex];
+      if (!item) {
+        this.$message.error("请选择一个收货地址");
+        return;
+      }
+      this.$axios
+        .post("/orders", {
+          shippingId: item.id,
+        })
+        .then((res) => {
+          this.$router.push({
+            path: "/order/pay",
+            // 传订单号
+            query: {
+              orderNo: res.orderNo
+            },
+          });
+        });
     },
   },
 };
