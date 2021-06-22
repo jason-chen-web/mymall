@@ -178,7 +178,47 @@
         </div>
       </div>
     </div>
-
+    <modal
+      title="新增确认"
+      btnType="1"
+      :showModal="showEditModal"
+      @cancel="showEditModal = false"
+      @submit="submitAddress"
+    >
+      <template v-slot:body>
+        <div class="edit-wrap">
+          <div class="item">
+            <input type="text" class="input" placeholder="姓名" />
+            <input type="text" class="input" placeholder="手机号" />
+          </div>
+          <div class="item">
+            <select name="province" id="">
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="河北">河北</option>
+            </select>
+            <select name="city" id="">
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="河北">石家庄</option>
+            </select>
+            <select name="district" id="">
+              <option value="昌平区">昌平区</option>
+              <option value="海淀区">海淀区</option>
+              <option value="东城区">东城区</option>
+              <option value="西城区">西城区</option>
+              <option value="顺义区">顺义区</option>
+            </select>
+          </div>
+          <div class="item">
+            <textarea name="street"></textarea>
+          </div>
+          <div class="item">
+            <input type="text" class="input" placeholder="邮编" />
+          </div>
+        </div>
+      </template>
+    </modal>
 
     <modal
       title="删除确认"
@@ -200,7 +240,6 @@ export default {
   name: "order-confirm",
   data() {
     return {
-    
       list: [], //收货地址列表
       showDelModal: false, //是否显示新增或者编辑弹框
       cartList: [], //购物车中需要结算的商品列表
@@ -208,6 +247,7 @@ export default {
       count: 0, //商品结算数量
       checkedItem: {}, //选中的商品对象
       userAction: "", //用户的行为 0：新增，1：编辑，2删除
+      showEditModal: true, //是否显示新增或编辑弹框
     };
   },
   components: {
@@ -233,14 +273,8 @@ export default {
         this.cartList.map((item) => {
           this.count += item.quantity;
         });
-
-
-
-
       });
     },
-
-
 
     delAddress(item) {
       this.checkedItem = item;
@@ -248,10 +282,7 @@ export default {
       this.showDelModal = true;
       // this.submitAddress();
     },
-          // checkedItem已赋值/改变为item，全局有效，
-
-
-
+    // checkedItem已赋值/改变为item，全局有效，
 
     // // 地址删除，新增，编辑
 
@@ -455,16 +486,14 @@ export default {
     }
   }
   .edit-wrap {
-    font-size: 14px;
     .item {
-      margin-bottom: 15px;
+      padding-bottom: 15px;
+      font-size: 14px;
       .input {
-        display: inline-block;
         width: 283px;
         height: 40px;
-        line-height: 40px;
-        padding-left: 15px;
         border: 1px solid #e5e5e5;
+        padding-left: 15px;
         & + .input {
           margin-left: 14px;
         }
@@ -476,8 +505,8 @@ export default {
         margin-right: 15px;
       }
       textarea {
-        height: 62px;
         width: 100%;
+        height: 62px;
         padding: 13px 15px;
         box-sizing: border-box;
         border: 1px solid #e5e5e5;
