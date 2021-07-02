@@ -278,7 +278,9 @@ export default {
           this.showModal = true;
           this.$store.dispatch("saveCartCount", res.cartTotalQuantity);
         })
-        .catch(() => {});
+        .catch(() => {
+          // this.showModal= true;
+        });
     },
     goToCart() {
       this.$router.push("/cart");
