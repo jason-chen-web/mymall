@@ -1,7 +1,7 @@
 <template>
   <div class="ali-pay">
     <loading></loading>
-    <div class="form" v-html="content"></div>
+    <div v-html="content"></div>
   </div>
 </template>
 

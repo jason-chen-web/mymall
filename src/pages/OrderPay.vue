@@ -18,7 +18,10 @@
               </p>
             </div>
             <div class="order-total">
-              <p>应付总额：<span>{{2599}}</span>元</p>
+              <p>
+                应付总额：<span>{{ 2599 }}</span
+                >元
+              </p>
               <p>
                 订单详情<em
                   class="icon-down up"
@@ -30,7 +33,7 @@
           <div class="item-detail" v-if="showDetail">
             <div class="item">
               <div class="detail-title">订单号：</div>
-              <div class="detail-info theme-color">{{ orderNo }}</div>
+              <div class="detail-info theme-color">{{ orderId }}</div>
             </div>
             <div class="item">
               <div class="detail-title">收货信息：</div>
@@ -42,8 +45,10 @@
               <div class="detail-title">商品名称：</div>
               <div class="detail-info">
                 <ul>
-                  <li v-for="(item,index) in orderDetail" :key="index" >
-                    <img v-lazy="item.productImage" alt="">{{item.productName}}
+                  <li v-for="(item, index) in orderDetail" :key="index">
+                    <img v-lazy="item.productImage" alt="" />{{
+                      item.productName
+                    }}
                   </li>
                 </ul>
               </div>
@@ -58,33 +63,50 @@
           <h3>选择以下支付方式付款</h3>
           <div class="pay-way">
             <p>支付平台</p>
-            <div class="pay pay-ali "  :class="{'checked':payType==1}" @click="paySubmit(1)"></div>
-            <div class="pay pay-wechat " :class="{'checked':payType==2}" @click="paySubmit(2)"></div>
+            <div
+              class="pay pay-ali"
+              :class="{ checked: payType == 1 }"
+              @click="paySubmit(1)"
+            ></div>
+            <div
+              class="pay pay-wechat"
+              :class="{ checked: payType == 2 }"
+              @click="paySubmit(2)"
+            ></div>
           </div>
         </div>
       </div>
     </div>
-    <scan-pay-code v-if="showPay"></scan-pay-code>
+    <scan-pay-code
+    :showPay='showPay'
+    :img='payImg' 
+    @close="closePayModal"
+
+    ></scan-pay-code>
+
   </div>
 </template>
 <script>
 // import OrderHeader from "./../components/OrderHeader";
 // import ScanPayCode from './../components/ScanPayCode'
+import QRCode from "qrcode";
+import ScanPayCode from '../components/ScanPayCode.vue'
 export default {
   name: "order-pay",
   data() {
     return {
       showDetail: false, //是否显示订单详情
-      showPay: false, //是否显示微信支付弹框
-      orderNo: this.$route.query.orderNo,
+      orderId: this.$route.query.orderNo,
       addressInfo: "", //收货人地址信息,
       orderDetail: [], //订单详情，包含商品列表
-      payType:'',//支付类型
+      payType: "", //支付类型
+      showPay:false,
+      payImg:''
     };
   },
   components: {
     // OrderHeader,
-    // ScanPayCode
+     ScanPayCode
   },
   mounted() {
     this.getOrderDetail();
@@ -93,26 +115,44 @@ export default {
     // 关闭微信弹框
     closePayModal() {
       this.showPay = false;
-      this.showPayModal = true;
-      clearInterval(this.T);
+      
+      // this.showPayModal = true;
+      // clearInterval(this.T);
     },
     goOrderList() {
       this.$router.push("/order/list");
     },
-   
+
     getOrderDetail() {
-      this.$axios.get(`/orders/${this.orderNo}`).then((res) => {
+      this.$axios.get(`/orders/${this.orderId}`).then((res) => {
         let item = res.shippingVo;
         this.addressInfo = `${item.receiverName} ${item.receiverMobile} ${item.receiverProvince} ${item.receiverCity} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress} ${item.receiverZip}`;
         this.orderDetail = res.orderItemVoList;
       });
     },
-     paySubmit(payType){
-      if (payType==1) {
-        window.open('/#/order/alipay?orderId='+this.orderNo),'_blank'
-        
+    paySubmit(payType) {
+      if (payType == 1) {
+        window.open("/#/order/alipay?orderId=" + this.orderId), "_blank";
+      } else {
+        this.$axios
+          .post("/pay", {
+            orderId: this.orderId,
+            orderName: "无名商城",
+            amount: 0.01, //单位元
+            payType: 2, //1支付宝，2微信
+          })
+          .then((res) => {
+            QRCode.toDataURL(res.content)
+              .then((url) => {
+                this.showPay=true
+                this.payImg=url
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          });
       }
-    }
+    },
   },
 };
 </script>
