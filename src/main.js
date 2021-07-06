@@ -47,8 +47,17 @@ axios.interceptors.response.use(function(response) {
     return Promise.reject(res);
 
   }
+},
+// 上面拦截的是业务
+//下面拦截的是服务器异常-http状态码请求-请求发送失败
+//等价于catch，捕获异常
+(error)=>{
+let res= error.response;
+this.$message.error(res.data.msg)
+return Promise.reject(error);
+//return后接口就不会进到then里
+
 });
-// else上面拦截的是业务
 
 // mock开关
 // const mock = true;

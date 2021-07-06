@@ -19,7 +19,7 @@
             </div>
             <div class="order-total">
               <p>
-                应付总额：<span>{{ 2599 }}</span
+                应付总额：<span>{{ payment }}</span
                 >元
               </p>
               <p>
@@ -78,19 +78,29 @@
       </div>
     </div>
     <scan-pay-code
-    :showPay='showPay'
-    :img='payImg' 
-    @close="closePayModal"
-
+      :showPay="showPay"
+      :img="payImg"
+      @close="closePayModal"
     ></scan-pay-code>
-
+    <modal
+      title="支付完成"
+      btnType="3"
+      :showModal="showPayModal"
+      sureText="查看订单"
+      cancelText="未支付"
+      @cancel="showPayModal = false"
+      @submit="goOrderList"
+    >
+      <template v-slot:body>
+        <p>请您确认是否完成支付？</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
-// import OrderHeader from "./../components/OrderHeader";
-// import ScanPayCode from './../components/ScanPayCode'
 import QRCode from "qrcode";
-import ScanPayCode from '../components/ScanPayCode.vue'
+import ScanPayCode from "../components/ScanPayCode.vue";
+import Modal from "../components/Modal.vue";
 export default {
   name: "order-pay",
   data() {
@@ -100,13 +110,17 @@ export default {
       addressInfo: "", //收货人地址信息,
       orderDetail: [], //订单详情，包含商品列表
       payType: "", //支付类型
-      showPay:false,
-      payImg:''
+      showPay: false, //是否显示微信支付弹框
+      payImg: "", //微信支付的二维码地址
+      showPayModal: false,
+      //是否显示二次支付弹框
+      T: "", //定时器id
+      payment: 0, //订单总金额
     };
   },
   components: {
-    // OrderHeader,
-     ScanPayCode
+    ScanPayCode,
+    Modal,
   },
   mounted() {
     this.getOrderDetail();
@@ -115,9 +129,8 @@ export default {
     // 关闭微信弹框
     closePayModal() {
       this.showPay = false;
-      
-      // this.showPayModal = true;
-      // clearInterval(this.T);
+      this.showPayModal = true;
+      clearInterval(this.T);
     },
     goOrderList() {
       this.$router.push("/order/list");
@@ -128,6 +141,7 @@ export default {
         let item = res.shippingVo;
         this.addressInfo = `${item.receiverName} ${item.receiverMobile} ${item.receiverProvince} ${item.receiverCity} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress} ${item.receiverZip}`;
         this.orderDetail = res.orderItemVoList;
+        this.payment = res.payment;
       });
     },
     paySubmit(payType) {
@@ -144,14 +158,26 @@ export default {
           .then((res) => {
             QRCode.toDataURL(res.content)
               .then((url) => {
-                this.showPay=true
-                this.payImg=url
+                this.showPay = true;
+                this.payImg = url;
+                this.loopOrderState();
               })
-              .catch((err) => {
-                console.error(err);
+              .catch(() => {
+                this.$message.error('微信二维码生成失败，请稍后再试')
               });
           });
       }
+    },
+    // 轮询当前订单支付状态
+    loopOrderState() {
+      this.T = setInterval(() => {
+        this.$axios.get(`/orders/${this.orderId}`).then((res) => {
+          if (res.status == 20) {
+            clearInterval(this.T);
+            this.goOrderList();
+          }
+        });
+      }, 1000);
     },
   },
 };

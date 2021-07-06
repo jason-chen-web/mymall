@@ -31,7 +31,7 @@
           <!-- 两个都有时 -->
           <div class="btn-group" v-if="btnType==3">
             <a href="javascript:;" class="btn"  @click="$emit('submit')">{{sureText}}</a>
-            <a href="javascript:;" class="btn" @click="$emit('cancel')">{{cancelText}}</a>
+            <a href="javascript:;" class="btn btn-default" @click="$emit('cancel')">{{cancelText}}</a>
           </div>
         </div>
       </div>
