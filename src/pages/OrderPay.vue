@@ -1,10 +1,10 @@
 <template>
   <div class="order-pay">
-    <!-- <order-header title="订单支付">
+    <order-header title="订单支付">
       <template v-slot:tip>
         <span>请谨防钓鱼链接或诈骗电话，了解更多</span>
       </template>
-    </order-header> -->
+    </order-header>
     <div class="wrapper">
       <div class="container">
         <div class="order-wrap">
@@ -101,6 +101,7 @@
 import QRCode from "qrcode";
 import ScanPayCode from "../components/ScanPayCode.vue";
 import Modal from "../components/Modal.vue";
+import OrderHeader from '../components/OrderHeader.vue'
 export default {
   name: "order-pay",
   data() {
@@ -121,6 +122,7 @@ export default {
   components: {
     ScanPayCode,
     Modal,
+    OrderHeader
   },
   mounted() {
     this.getOrderDetail();

@@ -1,10 +1,11 @@
 <template>
   <div class="order-confirm">
-    <!-- <order-header title="订单确认">
+    <order-header title='订单确认' >
       <template v-slot:tip>
-        <span>请认真填写收货地址</span>
+      <span>请认真填写收货地址</span>
       </template>
-    </order-header> -->
+
+    </order-header>
     <!-- 定义svg -->
     <svg
       version="1.1"
@@ -270,7 +271,8 @@
   </div>
 </template>
 <script>
-// import OrderHeader from "../components/OrderHeader";
+import OrderHeader from "../components/OrderHeader";
+// import OrderHeader from '../components/OrderHeader.vue';
 import Modal from "./../components/Modal";
 export default {
   name: "order-confirm",
@@ -288,8 +290,9 @@ export default {
     };
   },
   components: {
-    // OrderHeader,
+    OrderHeader,
     Modal,
+   
   },
   mounted() {
     this.getAddressList();
