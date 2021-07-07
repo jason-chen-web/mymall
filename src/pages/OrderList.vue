@@ -13,17 +13,17 @@
           <div class="order" v-for="(order, index) of list" :key="index">
             <div class="order-title">
               <div class="item-info fl">
-                {{order.createTime}}
+                {{ order.createTime }}
                 <span>|</span>
-                {{order.receiverName}}
+                {{ order.receiverName }}
                 <span>|</span>
-                {{order.orderNo }}
+                {{ order.orderNo }}
                 <span>|</span>
-                {{order.paymentTypeDesc }}
+                {{ order.paymentTypeDesc }}
               </div>
               <div class="item-money fr">
                 <span>应付金额：</span>
-                <span class="money">{{order.payment }}</span>
+                <span class="money">{{ order.payment }}</span>
                 <span>元</span>
               </div>
             </div>
@@ -55,27 +55,42 @@
               </div>
             </div>
           </div>
-          <NoData v-if="!loading && list.length==0"></NoData>
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="total"
+            @current-change="handelChange"
+            :pageNum="pageNum"
+            class="pagination"
+          >
+          </el-pagination>
+
+          <NoData v-if="!loading && list.length == 0"></NoData>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import Loading from '../components/Loading.vue';
-import NoData from '../components/NoData.vue'
+import Loading from "../components/Loading.vue";
+import NoData from "../components/NoData.vue";
 import OrderHeader from "./../components/OrderHeader";
+import { Pagination } from "element-ui";
 export default {
   name: "order-list",
   components: {
     OrderHeader,
     Loading,
-    NoData
+    NoData,
+    [Pagination.name]: Pagination,
   },
   data() {
     return {
       list: [],
-      loading:true
+      loading: true,
+      pageSize: 10,
+      total: 0,
+      pageNum: 1,
     };
   },
   mounted() {
@@ -84,10 +99,15 @@ export default {
   methods: {
     getOrderList() {
       this.$axios
-        .get("/orders")
+        .get("/orders", {
+          params: {
+            pageNum: this.pageNum,
+          },
+        })
         .then((res) => {
-          this.loading=false;
+          this.loading = false;
           this.list = res.list;
+          this.total = res.pages;
         })
         // 如果报错就捕获再关loading
         .catch(() => {
@@ -101,6 +121,10 @@ export default {
           orderNo,
         },
       });
+    },
+    handelChange(pageNum) {
+      this.pageNum = pageNum;
+      this.getOrderList();
     },
   },
 };
