@@ -64,7 +64,7 @@
             class="pagination"
           >
           </el-pagination>
-
+      
           <NoData v-if="!loading && list.length == 0"></NoData>
         </div>
       </div>
@@ -76,6 +76,7 @@ import Loading from "../components/Loading.vue";
 import NoData from "../components/NoData.vue";
 import OrderHeader from "./../components/OrderHeader";
 import { Pagination } from "element-ui";
+
 export default {
   name: "order-list",
   components: {
@@ -84,13 +85,14 @@ export default {
     NoData,
     [Pagination.name]: Pagination,
   },
+
   data() {
     return {
       list: [],
       loading: true,
       pageSize: 10,
       total: 0,
-      pageNum: 1,
+      pageNum: 10,
     };
   },
   mounted() {
@@ -114,6 +116,7 @@ export default {
           this.loading = false;
         });
     },
+
     goPay(orderNo) {
       this.$router.push({
         path: "/order/pay",
@@ -126,6 +129,7 @@ export default {
       this.pageNum = pageNum;
       this.getOrderList();
     },
+
   },
 };
 </script>
@@ -201,8 +205,8 @@ export default {
         background-color: #ff6600;
         border-color: #ff6600;
       }
-      .load-more,
-      .scroll-more {
+      .load-more
+       {
         text-align: center;
       }
     }
