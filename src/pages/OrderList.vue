@@ -8,20 +8,22 @@
     <div class="wrapper">
       <div class="container">
         <div class="order-box">
+          <Loading v-if="loading"></Loading>
+          <!-- 请求成功前显示，成功后关闭 -->
           <div class="order" v-for="(order, index) of list" :key="index">
             <div class="order-title">
               <div class="item-info fl">
-                {{ order.paymentTime }}
+                {{order.createTime}}
                 <span>|</span>
-                {{ order.receiverName }}
+                {{order.receiverName}}
                 <span>|</span>
-                {{ order.orderNo }}
+                {{order.orderNo }}
                 <span>|</span>
-                {{ order.paymentTypeDesc }}
+                {{order.paymentTypeDesc }}
               </div>
               <div class="item-money fr">
                 <span>应付金额：</span>
-                <span class="money">{{ order.payment }}</span>
+                <span class="money">{{order.payment }}</span>
                 <span>元</span>
               </div>
             </div>
@@ -43,29 +45,37 @@
                   </div>
                 </div>
               </div>
-             <div class="good-state fr" v-if="order.status == 20">
-                <a href="javascript:;">{{order.statusDesc}}</a>
+              <div class="good-state fr" v-if="order.status == 20">
+                <a href="javascript:;">{{ order.statusDesc }}</a>
               </div>
               <div class="good-state fr" v-else>
-                <a href="javascript:;" @click="goPay(order.orderNo)">{{order.statusDesc}}</a>
+                <a href="javascript:;" @click="goPay(order.orderNo)">{{
+                  order.statusDesc
+                }}</a>
               </div>
             </div>
           </div>
+          <NoData v-if="!loading && list.length==0"></NoData>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import Loading from '../components/Loading.vue';
+import NoData from '../components/NoData.vue'
 import OrderHeader from "./../components/OrderHeader";
 export default {
   name: "order-list",
   components: {
     OrderHeader,
+    Loading,
+    NoData
   },
   data() {
     return {
       list: [],
+      loading:true
     };
   },
   mounted() {
@@ -73,15 +83,22 @@ export default {
   },
   methods: {
     getOrderList() {
-      this.$axios.get("/orders").then((res) => {
-        this.list = res.list;
-      });
+      this.$axios
+        .get("/orders")
+        .then((res) => {
+          this.loading=false;
+          this.list = res.list;
+        })
+        // 如果报错就捕获再关loading
+        .catch(() => {
+          this.loading = false;
+        });
     },
     goPay(orderNo) {
       this.$router.push({
         path: "/order/pay",
         query: {
-          orderNo
+          orderNo,
         },
       });
     },

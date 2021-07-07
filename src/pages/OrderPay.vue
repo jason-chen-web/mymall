@@ -101,7 +101,7 @@
 import QRCode from "qrcode";
 import ScanPayCode from "../components/ScanPayCode.vue";
 import Modal from "../components/Modal.vue";
-import OrderHeader from '../components/OrderHeader.vue'
+import OrderHeader from "../components/OrderHeader.vue";
 export default {
   name: "order-pay",
   data() {
@@ -122,7 +122,7 @@ export default {
   components: {
     ScanPayCode,
     Modal,
-    OrderHeader
+    OrderHeader,
   },
   mounted() {
     this.getOrderDetail();
@@ -165,7 +165,7 @@ export default {
                 this.loopOrderState();
               })
               .catch(() => {
-                this.$message.error('微信二维码生成失败，请稍后再试')
+                this.$message.error("微信二维码生成失败，请稍后再试");
               });
           });
       }
