@@ -1,7 +1,7 @@
 <template>
   <div class="ali-pay">
-    <loading></loading>
-    <div v-html="content"></div>
+    <loading v-if="loading"></loading>
+    <div class="form" v-html="content"></div>
   </div>
 </template>
 
@@ -9,11 +9,12 @@
 import Loading from '../components/Loading.vue'
 export default {
   name: "alipay",
+
   data() {
     return {
       orderId: this.$route.query.orderId,
       content: "",
-      // loading:true
+      loading:true
     };
   },
   components:{

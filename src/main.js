@@ -24,25 +24,26 @@ axios.interceptors.response.use(
     // 获取接口返回值
     let res = response.data;
     // 如果成功/status=0代表成功，其他都表示失败
-    let path = location.hash;
+    // let path = location.hash;
 
     if (res.status == 0) {
       // 返回接口返回值里的data
       return res.data;
       // 如果未登录
     } else if (res.status == 10) {
+      window.location.href = "/#/login";
       // 且地址不是首页地址-防止刷新首页后跳转
       // 跳转到登录页，main.js里用路有跳无效
-      if (path != "#/index") {
-        window.location.href = "/#/login";
-      }
-      // 如果失败就抛出异常进入catch,
+      // if (path != "#/index") {
+      //   window.location.href = "/#/login";
+      // }
+      // 如果失败就抛出异常进/报错入catch,
       return Promise.reject(res);
-      // 如果没写会进入then里
+      // 如果没写会进入then里-即成功时返回的内容
     } else {
       // 否则弹出警报信息
       Message.warning(res.msg);
-      // 如果失败就抛出异常
+      // 如果失败就抛出异常，不再进入then（成功）里
       return Promise.reject(res);
     }
   },

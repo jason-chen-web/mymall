@@ -20,11 +20,12 @@ export default {
   //   })
   // },
   mounted() {
-        // 如果用户登录了，就获取信息
+    // 如果用户登录了，就获取信息
     if (this.$cookie.get("userId")) {
       this.getUser();
       this.getCartCount();
     }
+
   },
   methods: {
     // 刷新时更新一次数据

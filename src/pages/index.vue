@@ -273,14 +273,14 @@ export default {
           // 加入购物车时就已经是选中状态
           selected: true,
         })
+        //如果报错则不执行then执行catch
         .then((res) => {
           // 加购物车成功后会弹框
           this.showModal = true;
           this.$store.dispatch("saveCartCount", res.cartTotalQuantity);
         })
-        .catch(() => {
-          // this.showModal= true;
-        });
+        // 如果未登录报错则执行catch后的内容
+
     },
     goToCart() {
       this.$router.push("/cart");
