@@ -163,7 +163,10 @@ export default {
             width: 100%;
             height: 100%;
             border: none;
-            padding: 18px;
+            box-sizing: border-box;
+            padding: 0 18px;
+            line-height: 48px;
+            background-color: #fff;
           }
         }
         .btn {

@@ -121,7 +121,7 @@
         </div>
         <div class="header-search">
           <div class="wrap">
-            <input type="text" name="keyword" id="" />
+            <input type="text" name="keyword" />
             <a href="javascript:;"></a>
           </div>
         </div>
@@ -354,7 +354,10 @@ export default {
             width: 264px;
             height: 50px;
             border-right: 1px solid #e0e0e0;
-            padding-left: 10px;
+            padding: 0 10px;
+            line-height: 48px;
+            background-color: #fff;
+            min-width: 0;
           }
           a {
             @include bcg(18px, 18px, "/imgs/icon-search.png");

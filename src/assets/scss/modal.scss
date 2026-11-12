@@ -1,7 +1,10 @@
 .modal {
   @include position(fixed);
   z-index: 10;
-  transition: all .5s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: top .5s;
 
   .mask {
     @include position(fixed);
@@ -20,9 +23,11 @@
   }
 
   .modal-dialog {
-    @include position(absolute, 40%, 50%, 660px, auto);
+    position: relative;
+    width: 660px;
+    height: auto;
+    z-index: 1;
     background-color: $colorG;
-    transform: translate(-50%, -50%);
     .modal-header {
       height: 60px;
       background-color: #f5f5f5;
