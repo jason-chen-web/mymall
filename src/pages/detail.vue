@@ -94,7 +94,7 @@
 </template>
 <script>
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import ProductParam from "../components/ProductParam";
+import ProductParam from "../components/productParam";
 import ServiceBar from "../components/ServiceBar";
 export default {
   name: "detail",

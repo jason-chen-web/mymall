@@ -75,7 +75,7 @@
 // import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
-import ProductParam from "../components/ProductParam";
+import ProductParam from "../components/productParam";
 export default {
   name: "product",
   components: {
