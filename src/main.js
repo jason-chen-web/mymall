@@ -79,6 +79,55 @@ Vue.use(VueCookie);
 // 注册，使用时直接this.$message即可,而不用每个组件都引入
 Vue.prototype.$message = Message;
 
+// 豆包语音经常在 compositionend 之后才把识别文字写进输入框。
+// Vue 2 的 v-model 在 compositionend 里同步读取，读到旧值后又写回去，文字就被清掉。
+function isImeTextControl(el) {
+  if (!el || !el.tagName) return false;
+  if (el.tagName === "TEXTAREA") return true;
+  if (el.tagName !== "INPUT") return false;
+  const type = (el.type || "text").toLowerCase();
+  return (
+    type === "text" ||
+    type === "search" ||
+    type === "tel" ||
+    type === "url" ||
+    type === "password"
+  );
+}
+
+let imeToken = 0;
+document.addEventListener(
+  "compositionstart",
+  (event) => {
+    if (!isImeTextControl(event.target)) return;
+    event.target.__imeToken = ++imeToken;
+  },
+  true
+);
+document.addEventListener(
+  "compositionend",
+  (event) => {
+    const el = event.target;
+    if (!isImeTextControl(el)) return;
+    const mine = ++imeToken;
+    el.__imeToken = mine;
+    // Vue 2 会在这次事件里同步读取旧值，并在微任务里写回输入框。
+    // 先挡住这次写回，等豆包把识别文字放进输入框后再同步给 v-model。
+    queueMicrotask(() => {
+      if (el.__imeToken !== mine) return;
+      el.composing = true;
+    });
+    const sync = () => {
+      if (!el.isConnected || el.__imeToken !== mine) return;
+      el.composing = false;
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    setTimeout(sync, 0);
+    setTimeout(sync, 50);
+  },
+  true
+);
+
 new Vue({
   router,
   store,

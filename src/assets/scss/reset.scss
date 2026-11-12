@@ -17,9 +17,17 @@ a{
 ul,li{
   list-style: none;
 }
-input{
-  font: normal;
+input, textarea, select {
+  /* 豆包语音按输入框的第一种字体画上屏文字，不会做汉字回退。
+     页面字体把 Arial 放在前面时，只能看到声波，看不到字。 */
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Heiti SC", "WenQuanYi Micro Hei", "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  color: #333333;
+  caret-color: #333333;
 }
-input:focus,a:focus{
+input:focus, textarea:focus, a:focus{
   outline: none;
 }

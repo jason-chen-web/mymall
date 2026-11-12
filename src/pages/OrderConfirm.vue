@@ -596,7 +596,9 @@ export default {
         width: 283px;
         height: 40px;
         border: 1px solid #e5e5e5;
-        padding-left: 15px;
+        padding: 0 15px;
+        line-height: 38px;
+        background-color: #fff;
         & + .input {
           margin-left: 14px;
         }

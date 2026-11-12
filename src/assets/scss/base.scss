@@ -11,10 +11,9 @@ a {
         height: 100%;
     }
 }
-input{
-    outline:none;
+input, textarea, select {
+    outline: none;
     box-sizing: border-box;
-    font-style: 14px;
 }
 .fl{
     float: left;
